@@ -1,0 +1,23 @@
+library(randomForest)
+library(verification)
+
+leaf=read.csv("Leaf.csv")
+
+# Initial Random Forest without including specimen number
+Species.rf=randomForest(as.factor(Species)~Solildity+Eccentricity+AspectRatio+IsoperimetricFactor+Elongation+MaximalIndentationDepth+Lobedness+StochasticConvexity+Entropy+AveIntensity+Uniformity+Smoothness+AveContrast+ThirdMoment, data=leaf)
+Species.rf
+
+# Show percent correctly classified
+Species.rf.confusion=table(leaf$Species,predict(Species.rf,type="response"))
+100*sum(diag(Species.rf.confusion))/sum(Species.rf.confusion)
+
+# Variable importance plot
+varImpPlot(Species.rf,scale=FALSE)
+
+# Random Forest after variable selection
+Species.rf2=randomForest(as.factor(Species)~Solildity+Eccentricity+AspectRatio+IsoperimetricFactor+Elongation, data=leaf)
+Species.rf2
+
+# Show percent correctly classified
+Species.rf2.confusion=table(leaf$Species,predict(Species.rf2,type="response"))
+100*sum(diag(Species.rf2.confusion))/sum(Species.rf2.confusion)
