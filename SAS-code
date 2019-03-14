@@ -1,0 +1,168 @@
+proc import datafile="/home/sammatina70/sasuser.v94/data/Leaf.csv"
+	out=work.Leaf;
+	getnames=yes;
+run;
+
+proc contents data=Leaf;
+run;
+
+proc univariate data=Leaf;
+	class Species;
+	var SpecimenNumber Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+run;
+
+proc princomp data=Leaf cov plots(only)=(scree patternprofile);
+ 	var  Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+run; 
+
+proc princomp data=Leaf plots(only)=(scree patternprofile);
+ 	var  Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+run; 
+
+
+
+title 'LDA';
+
+proc discrim pool=yes data=Leaf crossvalidate;
+	class Species;
+	var SpecimenNumber Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+
+title 'k-NN with 8 Neighbors';
+
+proc discrim data=Leaf method=npar k=8 crossvalidate;
+	class Species;
+	var Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+title 'k-NN with 7 Neighbors';
+
+proc discrim data=Leaf method=npar k=7 crossvalidate;
+	class Species;
+	var Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+title 'k-NN with 6 Neighbors';
+
+proc discrim data=Leaf method=npar k=6 crossvalidate;
+	class Species;
+	var Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+title 'k-NN with 5 Neighbors';
+
+proc discrim data=Leaf method=npar k=5 crossvalidate;
+	class Species;
+	var Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+title 'k-NN with 4 Neighbors';
+
+proc discrim data=Leaf method=npar k=4 crossvalidate;
+	class Species;
+	var Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+title 'k-NN with 3 Neighbors';
+
+proc discrim data=Leaf method=npar k=3 crossvalidate;
+	class Species;
+	var Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+title 'k-NN with 2 Neighbors';
+
+proc discrim data=Leaf method=npar k=2 crossvalidate;
+	class Species;
+	var Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+
+title 'Variable Selection';
+
+proc stepdisc data=Leaf method=bw;
+	class Species;
+	var SpecimenNumber Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+run;
+
+
+title 'LDA after Variable Selection';
+
+proc discrim pool=yes data=Leaf crossvalidate;
+	class Species;
+	var SpecimenNumber Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+
+title 'k-NN with 2 Neighbors after Variable Selection';
+
+proc discrim data=Leaf method=npar k=2 crossvalidate;
+	class Species;
+	var /*SpecimenNumber*/ Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	priors proportional;
+run;
+
+
+title 'Classification Tree';
+
+proc hpsplit data=Leaf cvmethod=random(10) seed=123 cvmodelfit intervalbins=5000;
+	class Species;
+	grow gini;
+	model Species = /*SpecimenNumber*/ Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	prune costcomplexity;
+run;
+
+title 'Classification Tree with 27 Leaves';
+
+proc hpsplit data=Leaf cvmethod=random(10) seed=123 cvmodelfit intervalbins=5000;
+	class Species;
+	grow gini;
+	model Species = /*SpecimenNumber*/ Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	prune costcomplexity (leaves=27);
+run;
+
+title 'Classification Tree with 30 Leaves';
+
+proc hpsplit data=Leaf cvmethod=random(10) seed=123 cvmodelfit intervalbins=5000;
+	class Species;
+	grow gini;
+	model Species = /*SpecimenNumber*/ Eccentricity AspectRatio Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity AveContrast Smoothness ThirdMoment Uniformity Entropy;
+	prune costcomplexity (leaves=30);
+run;
+
+title 'Classification Tree with 27 Leaves';
+
+proc hpsplit data=Leaf cvmethod=random(10) seed=123 cvmodelfit intervalbins=5000;
+	class Species;
+	grow gini;
+	model Species = /*SpecimenNumber*/ Eccentricity Elongation Solildity StochasticConvexity IsoperimetricFactor
+		MaximalIndentationDepth Lobedness AveIntensity ThirdMoment Entropy;
+	prune costcomplexity (leaves=27);
+run;
