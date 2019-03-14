@@ -5,3 +5,7 @@ This project was done as part of the Data Mining and Mahchine Learning course at
 Since this was an intro course into machine learning and the objective was to pick the best classifier, I used a bunch of different classifiers including, Discriminant Analysis, k-Nearest Neighbors with between 7 and 2 neighbors, classification trees, and random forests. I used SAS for everything except the random forests, which I did in R.
 
 In the end, the best classifier I found was k-Nearest Neighbors with 2 neighbors. I will include the final write-up I did explaining the results from the other methods.
+
+
+Data Citation:
+'Evaluation of Features for Leaf Discrimination', Pedro F.B. Silva, Andre R.S. Marcal, Rubim M. Almeida da Silva (2013). Springer Lecture Notes in Computer Science, Vol. 7950, 197-204.
